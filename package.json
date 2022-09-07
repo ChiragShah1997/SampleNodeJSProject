@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint \"**/*.js\"",
-    "lint:fix": "eslint --fix \"**/*.js\""
+    "lint:fix": "eslint --fix \"**/*.js\"",
+    "prepare": "husky install"
   },
   "author": "",
   "license": "ISC",
@@ -16,7 +17,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-n": "^15.2.5",
     "eslint-plugin-promise": "^6.0.1",
-    "husky": "^8.0.1",
+    "husky": "^4.3.8",
     "lint-staged": "^13.0.3",
     "prettier": "^2.7.1"
   },
