@@ -5,3 +5,4 @@ if (ww === 'production') {
 } else {
   console.log('test');
 }
+console.log('test')
