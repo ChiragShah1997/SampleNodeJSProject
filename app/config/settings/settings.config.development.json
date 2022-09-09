@@ -1,0 +1,6 @@
+{
+  "settings": [
+		{"name": "Sample NodeJS Project"},
+		{"description": "This is a sample project"}
+	]
+}
