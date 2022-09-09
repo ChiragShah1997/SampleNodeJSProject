@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const os = require('os');
 const mainConfig = require('./main');
+const logger = require('../../services/logger');
 
 class SettingsConfig {
   constructor() {
@@ -31,6 +32,7 @@ class SettingsConfig {
   loadConfigSettings() {
     const environmentConfigs = this.loadEnvironmentConfigFile();
     this.config = _.merge(this.config, ...environmentConfigs.settings);
+    this.config.logger = logger;
   }
 
   loadServerSettings() {
