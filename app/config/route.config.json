@@ -1,0 +1,9 @@
+{
+  "routes": [
+    {
+      "route": "/api/v1/ping",
+      "method": "GET",
+      "controller": "../controllers/v1/ping/pingController.js"
+    }
+  ]
+}

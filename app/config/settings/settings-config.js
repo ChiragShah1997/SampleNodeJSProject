@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const os = require('os');
 const mainConfig = require('./main');
-const logger = require('../../services/logger');
+const logger = require('../../services/helper/logger');
 
 class SettingsConfig {
   constructor() {

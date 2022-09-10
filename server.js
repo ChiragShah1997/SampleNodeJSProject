@@ -1,1 +1,1 @@
-require('./app/config/workerConfig');
+require('./app/config/worker-config');
