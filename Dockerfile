@@ -8,7 +8,7 @@ FROM node:latest
 RUN mkdir -p /usr/src/app
 
 # Set newly created directory as current working directory
-WORKDIR /usr/src/app
+WORKDIR /usr/src/app/
 
 # Copy package*.json file
 COPY package*.json /usr/src/app/
@@ -23,4 +23,4 @@ COPY . /usr/src/app/
 EXPOSE 3000
 
 # Command to run within container
-CMD ["node", "server.js"]
+CMD ["npm", "run", "develop"]

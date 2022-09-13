@@ -5,13 +5,15 @@ services:
     image: sample-project
     restart: unless-stopped
     build: .
+    volumes:
+      - .:/usr/src/app/
     ports:
       - "3000:3000"
     links:
       - mongo
 
   mongo:
-    image: mongo:5.0
+    image: mongo
     container_name: mongo
     environment:
         - MONGO_INITDB_ROOT_USERNAME=root

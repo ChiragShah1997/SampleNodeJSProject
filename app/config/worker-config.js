@@ -10,6 +10,7 @@ const morgan = require('morgan');
 const routeConfig = require('./route-config');
 const errorMessages = require('./error.config.json');
 const settingsConfig = require('./settings/settings-config');
+const mongoDBConnection = require('../middleware/database');
 
 const application = express();
 
@@ -89,6 +90,18 @@ const configureRoutes = (app) => {
   routeConfig.registerRoutes(app, settingsConfig.config);
 };
 
+const connectDB = () => {
+  const log = settingsConfig.config.logger;
+
+  mongoDBConnection.connect()
+  .then(() => {
+    log.info('DB Connection Established Successfully');
+  })
+  .catch((error) => {
+    log.error(`Error while establishing DB connection : ${error}`);
+  });
+}
+
 const startServer = (app) => {
   const log = settingsConfig.config.logger;
 
@@ -107,6 +120,7 @@ const configureWorker = (app) => {
   configureApplication(app);
   configureRoutes(app);
   configureErrorHandler(app);
+  connectDB();
   startServer(app);
 };
 
