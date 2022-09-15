@@ -56,6 +56,7 @@ class RouteConfig {
       case 'put':
       case 'post':
       case 'delete':
+      case 'patch':
         return method;
       default:
         throw new Error(

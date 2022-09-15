@@ -4,6 +4,32 @@
       "route": "/api/v1/ping",
       "method": "GET",
       "controller": "../controllers/v1/ping/pingController.js"
+    },
+    {
+      "route": "/api/v1/users",
+      "method": "GET",
+      "controller": "../controllers/v1/user/userController.js"
+    },
+    {
+      "route": "/api/v1/users",
+      "method": "POST",
+      "controller": "../controllers/v1/user/userController.js"
+    },
+    {
+      "route": "/api/v1/users/:id",
+      "method": "GET",
+      "action": "getUserById",
+      "controller": "../controllers/v1/user/userController.js"
+    },
+    {
+      "route": "/api/v1/users/:id",
+      "method": "DELETE",
+      "controller": "../controllers/v1/user/userController.js"
+    },
+    {
+      "route": "/api/v1/users/:id",
+      "method": "PATCH",
+      "controller": "../controllers/v1/user/userController.js"
     }
   ]
 }

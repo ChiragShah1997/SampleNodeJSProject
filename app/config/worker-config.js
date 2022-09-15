@@ -11,6 +11,7 @@ const routeConfig = require('./route-config');
 const errorMessages = require('./error.config.json');
 const settingsConfig = require('./settings/settings-config');
 const mongoDBConnection = require('../middleware/database');
+const notFound = require('../middleware/not-found');
 
 const application = express();
 
@@ -47,41 +48,29 @@ const configureApplication = (app) => {
 };
 
 const configureErrorHandler = (app) => {
-  app.use((req, res, next) => {
+  const log = settingsConfig.config.logger;
+  
+  app.use(notFound);
+  
+  app.use((err, req, res, next) => {
+    log.error(
+      '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Error for Request<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<',
+    );
+    log.error(`requested API : ${req.url}`);
+    log.error(`method : ${req.method}`);
+    log.error('request body : ');
+    log.error(
+      util.inspect(req.body, {
+        showHidden: false,
+        depth: 2,
+        breakLength: Infinity,
+      }),
+    );
+    log.error(`request Authorization  header:  ${req.get('Authorization')}`);
+    log.error(
+      '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>End of error<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<',
+    );
     next(new errors.NotFound(errorMessages.ERR_API_NOT_FOUND));
-  });
-  app.use((_err, req, res) => {
-    const err = _err;
-    const log = settingsConfig.config.logger;
-    if (err) {
-      log.error(
-        '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Error for Request<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<',
-      );
-      log.error(`requested API : ${req.url}`);
-      log.error(`method : ${req.method}`);
-      log.error('request body : ');
-      log.error(
-        util.inspect(req.body, {
-          showHidden: false,
-          depth: 2,
-          breakLength: Infinity,
-        }),
-      );
-      log.error(`request Authorization  header:  ${req.get('Authorization')}`);
-      log.error(
-        '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Error stack<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<',
-      );
-      log.error(err);
-      log.error(
-        '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>End of error<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<',
-      );
-      if (settingsConfig.config.env === 'production') {
-        // deletes the stack if it is production environment.
-        // As stack is just for development purpose.
-        delete err.stack;
-      }
-      res.status(err.statusCode || err.status || 500).json(err);
-    }
   });
 };
 
@@ -93,13 +82,17 @@ const configureRoutes = (app) => {
 const connectDB = () => {
   const log = settingsConfig.config.logger;
 
-  mongoDBConnection.connect()
-  .then(() => {
-    log.info('DB Connection Established Successfully');
+  return new Promise((resolve, reject) => {
+    return mongoDBConnection.connect()
+    .then(() => {
+      log.info('DB Connection Established Successfully');
+      resolve('Success')
+    })
+    .catch((error) => {
+      log.error(`Error while establishing DB connection : ${error}`);
+      reject(error);
+    });
   })
-  .catch((error) => {
-    log.error(`Error while establishing DB connection : ${error}`);
-  });
 }
 
 const startServer = (app) => {
@@ -116,12 +109,18 @@ const startServer = (app) => {
   });
 };
 
-const configureWorker = (app) => {
-  configureApplication(app);
-  configureRoutes(app);
-  configureErrorHandler(app);
-  connectDB();
-  startServer(app);
+const configureWorker = async (app) => {
+  const log = settingsConfig.config.logger;
+
+  await configureApplication(app);
+  await configureRoutes(app);
+  await configureErrorHandler(app);
+  connectDB().then(function () {
+    startServer(app);
+  })
+  .catch(function (error) {
+    log.error(`Error : ${error}`);
+  });
 };
 
 configureWorker(application);
