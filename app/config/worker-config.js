@@ -40,6 +40,7 @@ const configureApplication = (app) => {
     }),
   ); // support encoded bodies
 
+  
   app.use((req, res, next) => {
     res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.set('Pragma', 'no-cache');
