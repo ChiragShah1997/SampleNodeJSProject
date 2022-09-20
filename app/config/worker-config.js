@@ -28,6 +28,8 @@ const configureApplication = (app) => {
     },
   });
 
+  app.use(express.static(join(__dirname, "./app/public")));
+
   app.use(multer.single('file'));
   app.use(cors());
   app.use(compression());
